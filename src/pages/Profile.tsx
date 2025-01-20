@@ -1,6 +1,7 @@
-import { Card, CardContent, CircularProgress, Typography } from "@mui/material";
+import { Button, Card, CardContent, CircularProgress, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { fetchUserProfile } from "../services/authService";
+import { logout } from "../utils/utils";
 
 interface UserProfile {
     id: string;
@@ -13,7 +14,6 @@ const Profile = () => {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    
     useEffect(() => {
         const getProfile = async () => {
           try {
@@ -56,9 +56,18 @@ const Profile = () => {
         <Typography variant="body1">
             <strong>Email:</strong> {profile.email}
         </Typography>
+        <Button 
+          variant="contained" 
+          color="error" 
+          onClick={() => logout()}
+          style={{ marginTop: '20px' }}
+        >
+          Logout
+        </Button>
       </CardContent>
     </Card>
   );
 };
 
 export default Profile;
+

@@ -1,7 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { logout } from "./utils";
 
 const axiosInstance = axios.create({
   baseURL: "http://127.0.0.1:8000/",
@@ -14,7 +13,7 @@ let isRefreshing = false;
 let failedQueue: {
   resolve: (value?: unknown) => void;
   reject: (reason?: any) => void;
-}[];
+}[]=[];
 
 const refreshAccessToken = async () => {
   try {
@@ -26,7 +25,7 @@ const refreshAccessToken = async () => {
 
     const response = await axiosInstance.post("/users/token/refresh/", {
       refresh: refreshAcessToken,
-    });
+    },{ timeout: 3000 });
 
     const { access, refresh } = response.data;
 
@@ -59,11 +58,14 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
+
       const originalRequest = error.config;
-      const auth = useContext(AuthContext); 
-  
+      console.log("nii refresh",!originalRequest._retry,error.response,error.response.status)
+
+    
       if (error.response && error.response.status === 401 && !originalRequest._retry) {
         if (isRefreshing) {
+            
           return new Promise((resolve, reject) => {
             failedQueue.push({ resolve, reject });
           })
@@ -75,23 +77,23 @@ axiosInstance.interceptors.response.use(
               return Promise.reject(err);
             });
         }
-  
         originalRequest._retry = true;
         isRefreshing = true;
   
         try {
-          const newAccessToken = await refreshAccessToken();
+          const { access } = await refreshAccessToken();
 
-          failedQueue.forEach((req) => req.resolve(newAccessToken));
+          failedQueue.forEach((req) => req.resolve(access));
           failedQueue = [];
   
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          originalRequest.headers.Authorization = `Bearer ${access}`;
           return axiosInstance(originalRequest);
         } catch (error) {
           failedQueue.forEach((req) => req.reject(error));
           failedQueue = [];
 
-          auth?.logout();
+        
+          logout();
           
           return Promise.reject(error);
         } finally {

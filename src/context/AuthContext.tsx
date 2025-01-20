@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import { createContext, ReactNode, useState } from "react";
 
+
 interface AuthContectType {
   accessToken: string | null;
   refreshToken: string | null;
@@ -13,6 +14,7 @@ export const AuthContext = createContext<AuthContectType | undefined>(
 );
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+
   const [accessToken, setAccessToken] = useState<string | null>(
     Cookies.get("access_token") || null
   );
@@ -30,6 +32,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     Cookies.remove("refresh_token");
     setRefreshToken(null);
     setAccessToken(null);
+    window.location.href = "/login";
   };
 
   return (
@@ -38,3 +41,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+
