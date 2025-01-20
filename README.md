@@ -1,46 +1,69 @@
-# Getting Started with Create React App
+# Auth System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+An authentication web application built with React(Typescipt), Tailwind CSS, Formik for form handling and Material UI for components.
 
-In the project directory, you can run:
 
-### `yarn start`
+### Instructions for Setup
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Prerequisites
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+* Node.js (v22+ recommended)
+* Yarn
 
-### `yarn test`
+Steps to Run Locally
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone the Repository:
 
-### `yarn build`
+```
+git clone https://github.com/enaannan/auth_system_web.git
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+cd auth_system_web
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install Dependencies:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+``` yarn ```
 
-### `yarn eject`
+3. Set Up Environment variables:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Create a `.env` file in the root directory and add the following:
+`REACT_APP_API_BASE_URL=http://127.0.0.1:8000`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4. Run the Development Server:
+`yarn start`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+5. Build the Project:
+`yarn build`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Hosted Links
 
-## Learn More
+* Frontend :
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* Backend :
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Authentication Flow
+
+1. User Login:
+
+    * The user submits login credentials. ie email & password view the login form
+    * The credentials are sent to the backend for validation.
+    * On success, the backend returns an access token and a refresh token.
+    * Tokens are securely stored in HTTP-only cookies.
+    * The user is redireced to the profile page when the login is successful
+
+2. Accessing Protected Routes:
+
+    * When making API requests, the aceess token is included in every request's Authorization header via the axios's response interceptor
+    * If the acess token expires, the interceptor catches the 401 error.
+    * A request is then sent to the backend to refresh the access tokens using the securly stored refresh tokens.
+    * If the refresh token is invalid or expired, the user is logged out and redirected to the login page.
+    * A user attempting to directly access the Profile route without valid access tokens will be redirect to the login page.
+
+3. Logout Process:
+
+    * The user can manually log out view the logout button on the profile page
+    * The logout clear the cookies and redirects the user to the login page
+
+
