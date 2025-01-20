@@ -2,8 +2,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { logout } from "./utils";
 
+const apiUrl = process.env.REACT_APP_API_URL;
 const axiosInstance = axios.create({
-  baseURL: "http://127.0.0.1:8000/",
+  baseURL: apiUrl,
   headers: {
     "Content-Type": "application/json",
   },

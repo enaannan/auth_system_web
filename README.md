@@ -39,9 +39,9 @@ Create a `.env` file in the root directory and add the following:
 
 ### Hosted Links
 
-* Frontend :
+* Frontend : https://auth-system-web.vercel.app/login
 
-* Backend :
+* Backend : https://auth-system-api-phbv.onrender.com
 
 Authentication Flow
 
