@@ -14,7 +14,7 @@ export const loginService = async (email: string, password: string) => {
     );
     const { access_token, refresh_token } = response.data;
     Cookies.set("access_token", access_token, {
-      expires: 1,
+        expires: 15 / (60 * 24),
       secure: true,
       sameSite: "strict",
     });
